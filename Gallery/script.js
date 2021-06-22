@@ -10,15 +10,14 @@ function Gallery(gallery) {
 
   function closeModal() {
     modal.classList.remove('open');
-    // removing eventListners
-    window.removeEventListener(
-      'keyup',
-      (e) => e.key === 'Escape' && closeModal()
-    );
 
     // next and prev button
-    nextButton.removeEventListener('click', () => {
-      console.log(currentElement);
+    nextButton.removeEventListener('click', nextImage);
+    prevButton.removeEventListener('click', prevImage);
+    window.removeEventListener('keyup', (e) => {
+      if (e.key === 'Escape') return closeModal();
+      if (e.key === 'ArrowRight') return nextImage();
+      if (e.key === 'ArrowLeft') return prevImage();
     });
   }
 
@@ -28,16 +27,25 @@ function Gallery(gallery) {
     }
     modal.classList.add('open');
     // event listeners to be bound when the modal opens
-    // closing modal with esc key
-    window.addEventListener('keyup', (e) => e.key === 'Escape' && closeModal());
 
     // next and prev button
-    nextButton.addEventListener('click', () => {
-      showImage(currentElement.nextElementSibling);
+    nextButton.addEventListener('click', nextImage);
+    prevButton.addEventListener('click', prevImage);
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'Escape') return closeModal();
+      if (e.key === 'ArrowRight') return nextImage();
+      if (e.key === 'ArrowLeft') return prevImage();
     });
-    prevButton.addEventListener('click', () => {
-      showImage(currentElement.previousElementSibling);
-    });
+  }
+
+  function nextImage() {
+    showImage(currentElement.nextElementSibling || gallery.firstElementChild);
+  }
+
+  function prevImage() {
+    showImage(
+      currentElement.previousElementSibling || gallery.lastElementChild
+    );
   }
 
   function showImage(imageElement) {
@@ -58,6 +66,13 @@ function Gallery(gallery) {
   // opening image in modal
   images.forEach((image) =>
     image.addEventListener('click', (e) => showImage(e.currentTarget))
+  );
+
+  images.forEach((image) =>
+    image.addEventListener(
+      'keyup',
+      (e) => e.key === 'Enter' && showImage(e.currentTarget)
+    )
   );
 
   // closing modal with click
