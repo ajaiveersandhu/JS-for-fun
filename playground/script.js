@@ -1,4 +1,13 @@
-const date = new Date('11 August 2025');
+async function testing() {
+  await setTimeout(() => {
+    console.log('running 2');
+  }, 1000);
+}
 
-console.log(Date.now());
-console.dir(date);
+console.log('Starting');
+setTimeout(() => {
+  console.log('running 1');
+}, 2000);
+console.log('inbetween');
+testing();
+console.log('ending');
